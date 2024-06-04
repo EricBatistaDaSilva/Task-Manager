@@ -18,11 +18,10 @@ export function FormLogin() {
     reset,
   } = useForm<InputTypes>();
 
-  const { signIn } = useAuth();
+  const { signIn, isLoading } = useAuth();
 
   const onSubmit: SubmitHandler<InputTypes> = async ({ email, password }) => {
     const userLogged = await signIn({ email, password });
-
     if (userLogged) reset();
   };
 
@@ -36,9 +35,9 @@ export function FormLogin() {
             Email:
             <input
               type="email"
-              placeholder="exemplo@gmail.com"
+              placeholder="exemplo@email.com"
               {...register("email", {
-                required: "Campo obrigatório",
+                required: "campo obrigatório",
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: "Endereço de e-mail inválido",
@@ -54,19 +53,19 @@ export function FormLogin() {
             Senha:
             <input
               type="password"
-              placeholder="Digite sua senha"
+              placeholder="digite sua senha"
               {...register("password", {
-                required: "Campo obrigatório",
+                required: "campo obrigatório",
               })}
             />
           </label>
           <span className="inputError">{errors.password?.message}</span>
         </section>
 
-        <Button title="Login" loading={false} />
+        <Button title="Login" loading={isLoading} />
       </form>
 
-      <span className="messageChangPage">Ainda não possui conta? </span>
+      <span className="messageChangePage">Não tem uma conta? </span>
 
       <button className="buttonChangePage" onClick={() => navigate("/signup")}>
         Registre-se

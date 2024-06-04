@@ -7,7 +7,7 @@ type ButtonTypes = {
   variant?: ButtonStyle;
 };
 
-export function Button({ title, loading = false, variant = "primary"}: ButtonTypes) {
+export function Button({ title, loading = false, variant = "primary" }: ButtonTypes) {
   return (
     <Container variant={variant}>
       {loading ? <img src={loadingGif} width={14} /> : title}

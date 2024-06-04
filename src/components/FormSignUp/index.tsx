@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Container } from "./styles";
 import { Button } from "../Button";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useAuth } from "../../hooks/useAuth";
 
 type InputTypes = {
   name: string;
@@ -10,35 +11,38 @@ type InputTypes = {
 };
 
 export function FormSignUp() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<InputTypes>();
-  
-  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<InputTypes> = (data) => {
-    console.log(data);
-    reset();
-    navigate("/");
+  const { signUp, isLoading } = useAuth();
+
+  const onSubmit: SubmitHandler<InputTypes> = async ({ name, email, password }) => {
+    const userCreated = await signUp({ name, email, password });
+
+    if (userCreated) {
+      reset();
+      navigate("/");
+    }
   };
 
   return (
     <Container>
-      <h2>Crie sua conta</h2>
+      <h2>Faça seu cadastro</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <section>
           <label>
-            Nome:
+            Name:
             <input
               type="text"
-              placeholder="Digite seu nome"
+              placeholder="digite seu nome"
               {...register("name", {
-                required: "Campo obrigatório",
-                minLength: { value: 3, message: "Mínimo de 3 caracteres" },
+                required: "campo obrigatório",
               })}
             />
           </label>
@@ -50,9 +54,9 @@ export function FormSignUp() {
             Email:
             <input
               type="email"
-              placeholder="exemplo@gmail.com"
+              placeholder="exemplo@email.com"
               {...register("email", {
-                required: "Campo obrigatório",
+                required: "campo obrigatório",
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: "Endereço de e-mail inválido",
@@ -68,9 +72,13 @@ export function FormSignUp() {
             Senha:
             <input
               type="password"
-              placeholder="Digite sua senha"
+              placeholder="digite sua senha"
               {...register("password", {
-                required: "Campo obrigatório",
+                required: "campo obrigatório",
+                minLength: {
+                  value: 7,
+                  message: "A senha deve ter no mínimo 7 dígitos",
+                },
                 pattern: {
                   value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|:"<>?,./\\[\]-]).+$/,
                   message:
@@ -82,14 +90,14 @@ export function FormSignUp() {
           <span className="inputError">{errors.password?.message}</span>
         </section>
 
-        <Button title="Criar" loading={false} variant="secondary" />
+        <Button title="Finalizar" loading={isLoading} variant="secondary" />
       </form>
 
-      <span className="messageChangePage">
-        Já tem um conta?
-      </span>
+      <span className="messageChangePage">Já tem uma conta? </span>
 
-      <button className="buttonChangePage" onClick={() => navigate("/")}> login</button>
+      <button className="buttonChangePage" onClick={() => navigate("/")}>
+        Login
+      </button>
     </Container>
   );
 }
