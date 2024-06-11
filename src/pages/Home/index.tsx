@@ -12,7 +12,7 @@ export function Home() {
       <h2>Tarefas</h2>
 
       <div className="statsContainer">
-        <NavLink to={"/tasks"}>
+        <NavLink to={"/tasks?filter=completed&page=1"}>
           <StatsCard
             title="Completas"
             icon="task_alt"
@@ -22,7 +22,7 @@ export function Home() {
           />
         </NavLink>
 
-        <NavLink to={"/tasks"}>
+        <NavLink to={"/tasks?filter=pending&page=1"}>
           <StatsCard
             title="Pendentes"
             icon="pending_actions"
@@ -32,7 +32,7 @@ export function Home() {
           />
         </NavLink>
 
-        <NavLink to={"/tasks"}>
+        <NavLink to={"/tasks?filter=late&page=1"}>
           <StatsCard
             title="Atrasadas"
             icon="event_busy"
@@ -42,11 +42,11 @@ export function Home() {
           />
         </NavLink>
 
-        <NavLink to={"/tasks"}>
+        <NavLink to={"/tasks?filter=all&page=1"}>
           <StatsCard
             title="Total"
             icon="query_stats"
-            number={data?.tasksInfo.completed}
+            number={data?.tasksInfo.total}
           />
         </NavLink>
       </div>

@@ -1,9 +1,23 @@
+import { useState } from "react";
 import { Pagination } from "../../components/Pagination";
-import { TaskCard } from "../../components/TaskCard";
+import { TaskCard, TaskDataTypes } from "../../components/TaskCard";
 import { useQueryTasks } from "../../hooks/useQueryTasks";
 import { Container } from "./styles";
+import { ModalTaskDetails } from "../../components/ModalTaskDetails";
 
 export function Tasks() {
+  const [showModal, setShowModal] = useState(false);
+  const [taskDetails, setTaskDetails] = useState({} as TaskDataTypes);
+
+  function toggleModal() {
+    setShowModal((prevValue) => (prevValue == true ? false : true));
+  }
+
+  function addTaskDetails(task: TaskDataTypes) {
+    setTaskDetails(task);
+    toggleModal();
+  }
+
   const {
     data,
     page,
@@ -45,21 +59,31 @@ export function Tasks() {
           <p className="loading">Sem tarefas para mostrar</p>
         ) : (
           data?.map((task) => {
-            return <TaskCard data={task} key={task.id} onClick={() => {}} />;
+            return (
+              <TaskCard
+                data={task}
+                key={task.id}
+                onClick={() => addTaskDetails(task)}
+              />
+            );
           })
         )}
       </div>
 
       <div className="paginationMobile">
-          <Pagination
-            page={page}
-            step={5}
-            changeLimit={changeLimit}
-            nextPage={nextPage}
-            prevPage={prevPage}
-            totalPages={totalPages}
-          />
-        </div>
+        <Pagination
+          page={page}
+          step={5}
+          changeLimit={changeLimit}
+          nextPage={nextPage}
+          prevPage={prevPage}
+          totalPages={totalPages}
+        />
+      </div>
+
+      {showModal && (
+        <ModalTaskDetails task={taskDetails} toggleModal={toggleModal} />
+      )}
     </Container>
   );
 }
